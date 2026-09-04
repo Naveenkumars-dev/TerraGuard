@@ -11,10 +11,11 @@ import {
   Filter,
   Radio,
   ChevronDown,
-  Sparkles
+  Sparkles,
+  Menu
 } from 'lucide-react';
 
-export const Header = () => {
+export const Header = ({ isMobileSidebarOpen, setIsMobileSidebarOpen }) => {
   const {
     userRole,
     setUserRole,
@@ -37,12 +38,27 @@ export const Header = () => {
     'All Districts',
     'East Khasi Hills',
     'East Sikkim',
+    'North Sikkim',
     'Tawang',
+    'West Kameng',
+    'Papum Pare',
     'Aizawl',
+    'Lunglei',
+    'Champhai',
     'Kohima',
+    'Mokokchung',
+    'Dimapur',
     'Dima Hasao',
+    'Karbi Anglong',
+    'Kamrup Metropolitan',
+    'Imphal East',
+    'Senapati',
+    'Churachandpur',
+    'West Garo Hills',
+    'East Jaintia Hills',
     'Ri-Bhoi',
-    'South Garo Hills'
+    'West Tripura',
+    'Dhalai'
   ];
 
   const roleColors = {
@@ -56,49 +72,60 @@ export const Header = () => {
     <header className="gov-blue backdrop-blur-xl border-b-2 border-d4a574/30 text-slate-100 sticky top-0 z-40 shadow-2xl">
       {/* Official Government Banner */}
       <div className="bg-gradient-to-r from-d4a574/20 via-transparent to-d4a574/20 border-b border-d4a574/20 py-1">
-        <div className="max-w-[1700px] mx-auto px-6 flex items-center justify-center gap-4 text-[10px] font-bold tracking-wider text-d4a574">
+        <div className="max-w-[1700px] mx-auto px-4 sm:px-6 flex items-center justify-center gap-2 sm:gap-4 text-[9px] sm:text-[10px] font-bold tracking-wider text-d4a574">
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 bg-d4a574 rounded-full animate-pulse"></span>
-            GOVERNMENT OF INDIA
+            <span className="hidden sm:inline">GOVERNMENT OF INDIA</span>
+            <span className="sm:hidden">GOI</span>
           </span>
           <span className="text-d4a574/50">|</span>
-          <span>MINISTRY OF DEVELOPMENT OF NORTH EASTERN REGION</span>
-          <span className="text-d4a574/50">|</span>
-          <span>NATIONAL DISASTER MANAGEMENT AUTHORITY</span>
+          <span className="hidden sm:inline">MINISTRY OF DEVELOPMENT OF NORTH EASTERN REGION</span>
+          <span className="sm:hidden">MDoNER</span>
+          <span className="text-d4a574/50 hidden sm:inline">|</span>
+          <span className="hidden sm:inline">NATIONAL DISASTER MANAGEMENT AUTHORITY</span>
         </div>
       </div>
 
       {/* Low-Bandwidth Notice Banner */}
       {lowBandwidthMode && (
-        <div className="bg-gradient-to-r from-amber-600 to-amber-700 text-amber-5 px-6 py-1 text-xs font-bold flex items-center justify-between shadow-md">
+        <div className="bg-gradient-to-r from-amber-600 to-amber-700 text-amber-5 px-4 sm:px-6 py-1 text-[10px] sm:text-xs font-bold flex items-center justify-between shadow-md">
           <div className="flex items-center gap-2">
-            <WifiOff className="w-4 h-4 text-amber-200" />
-            <span>LOW CONNECTIVITY MODE ACTIVE — Cached GIS risk parameters loaded & SMS fallback protocol enabled.</span>
+            <WifiOff className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-200" />
+            <span className="hidden sm:inline">LOW CONNECTIVITY MODE ACTIVE — Cached GIS risk parameters loaded & SMS fallback protocol enabled.</span>
+            <span className="sm:hidden">LOW CONNECTIVITY MODE — SMS fallback active</span>
           </div>
-          <span className="text-[10px] bg-amber-900/80 px-2.5 py-0.5 rounded-full border border-amber-500/50 uppercase font-mono tracking-wide">
-            Fallback: SMS / IVR Protocol Active
+          <span className="text-[9px] sm:text-[10px] bg-amber-900/80 px-2 sm:px-2.5 py-0.5 rounded-full border border-amber-500/50 uppercase font-mono tracking-wide">
+            SMS / IVR Active
           </span>
         </div>
       )}
 
-      <div className="max-w-[1700px] mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div className="max-w-[1700px] mx-auto px-4 sm:px-6 py-2 sm:py-3 flex flex-wrap items-center justify-between gap-2 sm:gap-4">
         {/* Left Branding */}
-        <div className="flex items-center gap-3.5">
-          <div className="relative p-2.5 gov-emblem rounded-xl text-d4a574 shadow-lg">
-            <ShieldAlert className="w-7 h-7" />
-            <span className="absolute -top-1 -right-1 w-3 h-3 bg-d4a574 rounded-full border-2 border-slate-900 animate-pulse"></span>
+        <div className="flex items-center gap-2 sm:gap-3.5">
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+            className="lg:hidden p-2 rounded-lg bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 transition-colors"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+
+          <div className="relative p-2 sm:p-2.5 gov-emblem rounded-xl text-d4a574 shadow-lg">
+            <ShieldAlert className="w-5 h-5 sm:w-7 sm:h-7" />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-d4a574 rounded-full border-2 border-slate-900 animate-pulse"></span>
           </div>
 
           <div>
-            <div className="flex items-center gap-2.5">
-              <h1 className="text-xl font-black tracking-tight text-white flex items-center gap-2">
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              <h1 className="text-lg sm:text-xl font-black tracking-tight text-white flex items-center gap-2">
                 TerraGuard NER
               </h1>
-              <span className="px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-widest bg-d4a574/20 text-d4a574 border border-d4a574/40 rounded-full shadow-inner">
-                OFFICIAL SYSTEM
+              <span className="px-2 py-0.5 sm:px-2.5 sm:py-0.5 text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest bg-d4a574/20 text-d4a574 border border-d4a574/40 rounded-full shadow-inner">
+                OFFICIAL
               </span>
             </div>
-            <p className="text-[11px] text-slate-300 font-medium tracking-wide">
+            <p className="text-[9px] sm:text-[11px] text-slate-300 font-medium tracking-wide hidden sm:block">
               AI Landslide Early Warning & Risk Monitoring System • Ministry of Development of North Eastern Region (MDoNER)
             </p>
           </div>
@@ -149,11 +176,11 @@ export const Header = () => {
         </div>
 
         {/* Right Action Controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Low Bandwidth Toggle Button */}
           <button
             onClick={() => setLowBandwidthMode(!lowBandwidthMode)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all border shadow ${
+            className={`px-2 sm:px-3 py-1.5 rounded-xl text-[10px] sm:text-xs font-bold flex items-center gap-1.5 sm:gap-2 transition-all border shadow ${
               lowBandwidthMode
                 ? 'bg-amber-500/20 text-amber-300 border-amber-500/60 shadow-amber-950/40'
                 : 'bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700/80'
@@ -161,32 +188,32 @@ export const Header = () => {
             title="Toggle Low Bandwidth Connectivity Mode"
           >
             {lowBandwidthMode ? (
-              <WifiOff className="w-4 h-4 text-amber-400" />
+              <WifiOff className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
             ) : (
-              <Wifi className="w-4 h-4 text-emerald-400" />
+              <Wifi className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
             )}
             <span className="hidden sm:inline">{lowBandwidthMode ? 'Low Connectivity' : 'Full Bandwidth'}</span>
           </button>
 
           {/* Role Selector */}
-          <div className="flex items-center gap-1.5 bg-slate-800/90 border border-slate-700 rounded-xl px-2.5 py-1 shadow-sm">
-            <UserCheck className="w-4 h-4 text-sky-400" />
+          <div className="flex items-center gap-1.5 bg-slate-800/90 border border-slate-700 rounded-xl px-2 sm:px-2.5 py-1 shadow-sm">
+            <UserCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-400" />
             <select
               value={userRole}
               onChange={(e) => setUserRole(e.target.value)}
-              className="bg-transparent text-xs text-slate-200 font-extrabold focus:outline-none cursor-pointer"
+              className="bg-transparent text-[10px] sm:text-xs text-slate-200 font-extrabold focus:outline-none cursor-pointer"
             >
               <option value="District Admin" className="bg-slate-900 text-slate-200">
-                District Admin
+                Admin
               </option>
               <option value="Field Official" className="bg-slate-900 text-slate-200">
-                Field Official
+                Field
               </option>
               <option value="Citizen" className="bg-slate-900 text-slate-200">
                 Citizen
               </option>
               <option value="State Authority" className="bg-slate-900 text-slate-200">
-                State Authority
+                State
               </option>
             </select>
           </div>
@@ -194,14 +221,15 @@ export const Header = () => {
           {/* Demo Mode Button */}
           <button
             onClick={() => setDemoModeActive(!demoModeActive)}
-            className={`px-4 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-2 transition-all shadow-lg border ${
+            className={`px-3 sm:px-4 py-1.5 rounded-xl text-[10px] sm:text-xs font-extrabold flex items-center gap-1.5 sm:gap-2 transition-all shadow-lg border ${
               demoModeActive
                 ? 'bg-purple-600 text-white border-purple-400 shadow-purple-950/60 animate-pulse'
                 : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white border-purple-400/40 shadow-purple-950/30'
             }`}
           >
-            <Sparkles className="w-4 h-4" />
-            <span>{demoModeActive ? 'Exit Demo' : 'Demo Mode'}</span>
+            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">{demoModeActive ? 'Exit Demo' : 'Demo Mode'}</span>
+            <span className="sm:hidden">{demoModeActive ? 'Exit' : 'Demo'}</span>
           </button>
         </div>
       </div>

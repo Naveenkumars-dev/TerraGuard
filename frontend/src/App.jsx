@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
@@ -18,6 +18,7 @@ import { startRealtimeSimulation, stopRealtimeSimulation } from './services/simu
 
 const MainContent = () => {
   const { activeTab, liveAlertNotification, setLiveAlertNotification } = useApp();
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
     // Start real-time simulation interval loop (updates data every 20s)
@@ -53,12 +54,18 @@ const MainContent = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
-      <Header />
+      <Header 
+        isMobileSidebarOpen={isMobileSidebarOpen} 
+        setIsMobileSidebarOpen={setIsMobileSidebarOpen} 
+      />
       <DemoModeBar />
 
-      <div className="flex flex-1">
-        <Sidebar />
-        <main className="flex-1 bg-gradient-to-br from-slate-950 via-slate-900 to-gov-blue/20 overflow-y-auto">
+      <div className="flex flex-1 relative">
+        <Sidebar 
+          isMobileSidebarOpen={isMobileSidebarOpen} 
+          setIsMobileSidebarOpen={setIsMobileSidebarOpen} 
+        />
+        <main className="flex-1 bg-gradient-to-br from-slate-950 via-slate-900 to-gov-blue/20 overflow-y-auto min-h-[calc(100vh-85px)] lg:min-h-0">
           {renderTab()}
         </main>
       </div>
