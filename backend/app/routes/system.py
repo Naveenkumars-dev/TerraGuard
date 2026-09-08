@@ -2,11 +2,65 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from datetime import datetime
 from app.database import get_db
-from app.models import AuditLog, SystemConfig
+from app.models import AuditLog, SystemConfig, RFGatewayConfig
 from app.schemas import AuditLogResponse, ThresholdConfigUpdate
 from typing import List
 
 router = APIRouter(prefix="/api/system", tags=["System Status & Configuration"])
+
+@router.get("/rf-gateway")
+def get_rf_gateway_status(db: Session = Depends(get_db)):
+    cfg = db.query(RFGatewayConfig).first()
+    if not cfg:
+        cfg = RFGatewayConfig(
+            internet_online=True,
+            rf_link_connected=True,
+            messages_queued=7,
+            emergency_alerts_active=3,
+            last_sync="22:41"
+        )
+        db.add(cfg)
+        db.commit()
+        db.refresh(cfg)
+
+    return {
+        "internet_online": cfg.internet_online,
+        "rf_link_connected": cfg.rf_link_connected,
+        "messages_queued": cfg.messages_queued,
+        "emergency_alerts_active": cfg.emergency_alerts_active,
+        "last_sync": cfg.last_sync,
+        "mode": "ONLINE" if cfg.internet_online else "OFFLINE EMERGENCY MODE (RF Radio Gateway Active)"
+    }
+
+@router.post("/rf-gateway/toggle")
+def toggle_rf_gateway(db: Session = Depends(get_db)):
+    cfg = db.query(RFGatewayConfig).first()
+    if not cfg:
+        cfg = RFGatewayConfig(internet_online=False, rf_link_connected=True, messages_queued=7, emergency_alerts_active=3)
+        db.add(cfg)
+    else:
+        cfg.internet_online = not cfg.internet_online
+        if not cfg.internet_online:
+            cfg.messages_queued += 1
+
+    audit = AuditLog(
+        event_type="NETWORK FAILOVER TOGGLE",
+        zone_name="System Wide",
+        details=f"Cellular Internet status toggled to {'ONLINE' if cfg.internet_online else 'OFFLINE EMERGENCY MODE (RF Radio Link Active)'}",
+        action_by="TerraGuard Network Manager"
+    )
+    db.add(audit)
+    db.commit()
+    db.refresh(cfg)
+
+    return {
+        "internet_online": cfg.internet_online,
+        "rf_link_connected": cfg.rf_link_connected,
+        "messages_queued": cfg.messages_queued,
+        "emergency_alerts_active": cfg.emergency_alerts_active,
+        "last_sync": cfg.last_sync,
+        "mode": "ONLINE" if cfg.internet_online else "OFFLINE EMERGENCY MODE (RF Radio Gateway Active)"
+    }
 
 @router.get("/status")
 def get_system_status(db: Session = Depends(get_db)):

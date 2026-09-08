@@ -64,14 +64,14 @@ export const DemoModeBar = () => {
         <div className="flex items-center gap-3">
           <div className="p-2 gov-emblem text-gov-gold rounded-lg font-bold text-xs uppercase flex items-center gap-1.5 shadow">
             <Sparkles className="w-4 h-4 animate-spin" style={{ animationDuration: '4s' }} />
-            <span>SIH Judge Presentation Mode</span>
+            <span>Demo Mode</span>
           </div>
           <div>
             <h3 className="text-xs font-bold text-gov-gold">
-              Demo Scenario: Heavy Monsoon Event – East Khasi Hills
+              Sequential hazard detection workflow demonstration
             </h3>
             <p className="text-[11px] text-slate-300/80">
-              Sequential 5-step end-to-end hazard detection workflow demonstration.
+              Step-by-step landslide risk monitoring and alert system
             </p>
           </div>
         </div>

@@ -16,7 +16,7 @@ import {
   Menu
 } from 'lucide-react';
 
-export const Sidebar = ({ isMobileSidebarOpen, setIsMobileSidebarOpen }) => {
+export const Sidebar = ({ isMobileSidebarOpen, setIsMobileSidebarOpen, userRole: authUserRole }) => {
   const { activeTab, setActiveTab, userRole } = useApp();
 
   const navItems = [
@@ -126,10 +126,12 @@ export const Sidebar = ({ isMobileSidebarOpen, setIsMobileSidebarOpen }) => {
 
         {/* Sidebar Footer info */}
         <div className="p-4 border-t border-gov-gold/20 text-[11px] text-slate-400 space-y-2 bg-gov-blue/40">
-          <div className="flex justify-between items-center bg-gov-blue/80 px-2.5 py-1.5 rounded-lg border border-gov-gold/30 text-slate-200">
-            <span className="text-[10px] uppercase font-bold text-slate-400">Active Role</span>
-            <span className="font-extrabold text-xs text-gov-gold">{userRole}</span>
-          </div>
+          {authUserRole === 'ADMIN' && (
+            <div className="flex justify-between items-center bg-gov-blue/80 px-2.5 py-1.5 rounded-lg border border-gov-gold/30 text-slate-200">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Active Role</span>
+              <span className="font-extrabold text-xs text-gov-gold">{authUserRole}</span>
+            </div>
+          )}
           <div className="text-[10px] text-slate-400 text-center font-medium border-t border-gov-gold/20 pt-2">
             <div className="flex items-center justify-center gap-1.5 mb-1">
               <span className="w-1.5 h-1.5 bg-gov-gold rounded-full"></span>

@@ -1,15 +1,41 @@
 import axios from 'axios';
 import { MOCK_ZONES, MOCK_ALERTS, MOCK_REPORTS } from '../data/mockFallback';
+import { offlineStorage } from '../utils/offlineStorage';
 
 const API_BASE = 'http://127.0.0.1:8000/api';
+
+// Check if online
+const isOnline = () => navigator.onLine;
 
 export const fetchZones = async (district = null) => {
   try {
     const url = district && district !== 'All Districts' ? `${API_BASE}/zones?district=${encodeURIComponent(district)}` : `${API_BASE}/zones`;
     const res = await axios.get(url, { timeout: 5000 });
-    return res.data;
+    
+    // Cache the data for offline use
+    const data = res.data;
+    if (Array.isArray(data)) {
+      data.forEach(zone => offlineStorage.put('zones', zone));
+    }
+    
+    return data;
   } catch (err) {
-    console.warn('Backend API unavailable, using mock zones fallback', err.message);
+    console.warn('Backend API unavailable, using cached or mock zones fallback', err.message);
+    
+    // Try to get from offline storage first
+    try {
+      const cachedZones = await offlineStorage.getAll('zones');
+      if (cachedZones && cachedZones.length > 0) {
+        if (district && district !== 'All Districts') {
+          return cachedZones.filter((z) => z.district === district);
+        }
+        return cachedZones;
+      }
+    } catch (cacheErr) {
+      console.log('Cache read failed:', cacheErr);
+    }
+    
+    // Fallback to mock data
     if (district && district !== 'All Districts') {
       return MOCK_ZONES.filter((z) => z.district === district);
     }
@@ -22,6 +48,14 @@ export const fetchZoneById = async (id) => {
     const res = await axios.get(`${API_BASE}/zones/${id}`, { timeout: 5000 });
     return res.data;
   } catch (err) {
+    // Try cache first
+    try {
+      const cachedZone = await offlineStorage.get('zones', Number(id));
+      if (cachedZone) return cachedZone;
+    } catch (cacheErr) {
+      console.log('Cache read failed:', cacheErr);
+    }
+    
     console.warn(`Backend API unavailable, returning fallback for zone ${id}`);
     return MOCK_ZONES.find((z) => z.id === Number(id)) || MOCK_ZONES[0];
   }
@@ -58,8 +92,22 @@ export const calculateRiskScore = async (payload) => {
 export const fetchAlerts = async () => {
   try {
     const res = await axios.get(`${API_BASE}/alerts`, { timeout: 5000 });
-    return res.data;
+    
+    // Cache alerts
+    const data = res.data;
+    if (Array.isArray(data)) {
+      data.forEach(alert => offlineStorage.put('alerts', alert));
+    }
+    
+    return data;
   } catch (err) {
+    // Try cache first
+    try {
+      const cachedAlerts = await offlineStorage.getAll('alerts');
+      if (cachedAlerts && cachedAlerts.length > 0) return cachedAlerts;
+    } catch (cacheErr) {
+      console.log('Cache read failed:', cacheErr);
+    }
     return MOCK_ALERTS;
   }
 };

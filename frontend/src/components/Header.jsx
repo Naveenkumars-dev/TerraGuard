@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
+import { useOffline } from '../context/OfflineContext';
 import {
   ShieldAlert,
   Activity,
@@ -15,7 +16,7 @@ import {
   Menu
 } from 'lucide-react';
 
-export const Header = ({ isMobileSidebarOpen, setIsMobileSidebarOpen }) => {
+export const Header = ({ isMobileSidebarOpen, setIsMobileSidebarOpen, userInfo, onLogout }) => {
   const {
     userRole,
     setUserRole,
@@ -26,6 +27,8 @@ export const Header = ({ isMobileSidebarOpen, setIsMobileSidebarOpen }) => {
     demoModeActive,
     setDemoModeActive
   } = useApp();
+  
+  const { isOnline, isOfflineMode } = useOffline();
 
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -96,6 +99,20 @@ export const Header = ({ isMobileSidebarOpen, setIsMobileSidebarOpen }) => {
           </div>
           <span className="text-[9px] sm:text-[10px] bg-amber-900/80 px-2 sm:px-2.5 py-0.5 rounded-full border border-amber-500/50 uppercase font-mono tracking-wide">
             SMS / IVR Active
+          </span>
+        </div>
+      )}
+
+      {/* Offline Mode Banner */}
+      {!isOnline && (
+        <div className="bg-gradient-to-r from-red-600 to-red-700 text-white px-4 sm:px-6 py-1 text-[10px] sm:text-xs font-bold flex items-center justify-between shadow-md">
+          <div className="flex items-center gap-2">
+            <WifiOff className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
+            <span className="hidden sm:inline">OFFLINE MODE — Using cached data. Some features may be limited.</span>
+            <span className="sm:hidden">OFFLINE MODE — Cached data</span>
+          </div>
+          <span className="text-[9px] sm:text-[10px] bg-red-900/80 px-2 sm:px-2.5 py-0.5 rounded-full border border-red-500/50 uppercase font-mono tracking-wide">
+            Offline
           </span>
         </div>
       )}
@@ -195,28 +212,27 @@ export const Header = ({ isMobileSidebarOpen, setIsMobileSidebarOpen }) => {
             <span className="hidden sm:inline">{lowBandwidthMode ? 'Low Connectivity' : 'Full Bandwidth'}</span>
           </button>
 
-          {/* Role Selector */}
-          <div className="flex items-center gap-1.5 bg-slate-800/90 border border-slate-700 rounded-xl px-2 sm:px-2.5 py-1 shadow-sm">
-            <UserCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-400" />
-            <select
-              value={userRole}
-              onChange={(e) => setUserRole(e.target.value)}
-              className="bg-transparent text-[10px] sm:text-xs text-slate-200 font-extrabold focus:outline-none cursor-pointer"
-            >
-              <option value="District Admin" className="bg-slate-900 text-slate-200">
-                Admin
-              </option>
-              <option value="Field Official" className="bg-slate-900 text-slate-200">
-                Field
-              </option>
-              <option value="Citizen" className="bg-slate-900 text-slate-200">
-                Citizen
-              </option>
-              <option value="State Authority" className="bg-slate-900 text-slate-200">
-                State
-              </option>
-            </select>
-          </div>
+          {/* User Info & Logout */}
+          {userInfo && (
+            <div className="flex items-center gap-2">
+              <div className="hidden sm:flex items-center gap-2 bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-1.5 shadow-sm">
+                <UserCheck className="w-4 h-4 text-sky-400" />
+                <div className="text-left">
+                  <p className="text-[10px] text-slate-400 font-medium">{userInfo.role}</p>
+                  <p className="text-xs text-slate-200 font-bold">{userInfo.fullName}</p>
+                </div>
+              </div>
+              <button
+                onClick={onLogout}
+                className="p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+                title="Logout"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+              </button>
+            </div>
+          )}
 
           {/* Demo Mode Button */}
           <button

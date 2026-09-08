@@ -31,6 +31,7 @@
 * **Frontend**: React 18, Vite, Tailwind CSS, Leaflet, Lucide React, Recharts
 * **Backend**: Python 3.14, FastAPI, SQLAlchemy, SQLite, Pydantic, Scikit-Learn
 * **Database**: SQLite (`terraguard.db`)
+* **iOS**: SwiftUI, UIKit
 
 ---
 
@@ -63,6 +64,50 @@ npm run dev
 ```
 
 * Frontend Application will be live at: `http://localhost:3000`
+
+### 3. iOS App Setup
+
+#### Prerequisites
+* Xcode 14.0 or later
+* macOS 12.0 or later
+* iOS 15.0+ deployment target
+
+#### Setting up the iOS Project
+
+Since Xcode is not installed on the current system, you'll need to set up the project on a Mac with Xcode:
+
+1. **Open Xcode** and create a new project:
+   - Select **App** under iOS tab
+   - Product Name: `TerraGuardApp`
+   - Interface: `SwiftUI`
+   - Language: `Swift`
+   - Storage: `None`
+
+2. **Replace the default ContentView.swift** with the views in `ios/TerraGuardApp/Views/`:
+   - Copy all SwiftUI view files to your Xcode project
+   - Ensure all files are added to the target
+
+3. **Add the Models**:
+   - Copy `ios/TerraGuardApp/Models/` files to your project
+   - Add them to the target
+
+4. **Configure the App**:
+   - Set `TerraGuardApp.swift` as the main app entry point
+   - Ensure `MainTabView` is set as the root view
+
+5. **Build and Run**:
+   - Select a simulator or connected device
+   - Press Cmd+R to build and run
+
+#### iOS App Features
+
+The iOS app includes 5 main modules:
+
+1. **🏠 Dashboard**: Overview of current risk status and emergency response flow
+2. **🚨 Alerts**: Emergency alarm with "I AM SAFE" / "I NEED HELP" status reporting and rescue dashboard
+3. **🚧 Road Intelligence**: AI-powered multi-source road blockage detection with evacuation route optimization
+4. **🏠 Shelter & Resources**: Smart shelter allocation and AI resource distribution
+5. **📡 Emergency Communication**: Online/Offline mode toggle with RF gateway and button phone simulation
 
 ---
 
