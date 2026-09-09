@@ -3,18 +3,17 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const OfflineContext = createContext();
 
 export const OfflineProvider = ({ children }) => {
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [isOfflineMode, setIsOfflineMode] = useState(false);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const [lastOnlineTime, setLastOnlineTime] = useState(new Date());
 
   useEffect(() => {
     const handleOnline = () => {
-      setIsOnline(true);
-      setIsOfflineMode(false);
+      setIsOffline(false);
+      setLastOnlineTime(new Date());
     };
 
     const handleOffline = () => {
-      setIsOnline(false);
-      setIsOfflineMode(true);
+      setIsOffline(true);
     };
 
     window.addEventListener('online', handleOnline);
@@ -26,8 +25,13 @@ export const OfflineProvider = ({ children }) => {
     };
   }, []);
 
+  const value = {
+    isOffline,
+    lastOnlineTime,
+  };
+
   return (
-    <OfflineContext.Provider value={{ isOnline, isOfflineMode, setIsOfflineMode }}>
+    <OfflineContext.Provider value={value}>
       {children}
     </OfflineContext.Provider>
   );

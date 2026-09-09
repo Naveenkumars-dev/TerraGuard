@@ -103,20 +103,6 @@ export const Header = ({ isMobileSidebarOpen, setIsMobileSidebarOpen, userInfo, 
         </div>
       )}
 
-      {/* Offline Mode Banner */}
-      {!isOnline && (
-        <div className="bg-gradient-to-r from-red-600 to-red-700 text-white px-4 sm:px-6 py-1 text-[10px] sm:text-xs font-bold flex items-center justify-between shadow-md">
-          <div className="flex items-center gap-2">
-            <WifiOff className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
-            <span className="hidden sm:inline">OFFLINE MODE — Using cached data. Some features may be limited.</span>
-            <span className="sm:hidden">OFFLINE MODE — Cached data</span>
-          </div>
-          <span className="text-[9px] sm:text-[10px] bg-red-900/80 px-2 sm:px-2.5 py-0.5 rounded-full border border-red-500/50 uppercase font-mono tracking-wide">
-            Offline
-          </span>
-        </div>
-      )}
-
       <div className="max-w-[1700px] mx-auto px-4 sm:px-6 py-2 sm:py-3 flex flex-wrap items-center justify-between gap-2 sm:gap-4">
         {/* Left Branding */}
         <div className="flex items-center gap-2 sm:gap-3.5">
